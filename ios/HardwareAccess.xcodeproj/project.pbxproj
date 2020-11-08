@@ -20,6 +20,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9998F148941C3D3C175C91F9 /* libPods-HardwareAccess-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD6B0F9839C851D3EB89F9B /* libPods-HardwareAccess-tvOSTests.a */; };
 		A6C7131D7D7EFC1F6A1C5D0B /* libPods-HardwareAccess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B5DAB6269D64A42DBDBAA98 /* libPods-HardwareAccess.a */; };
+		F93B11842556D12900437A28 /* Sei_la.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93B11832556D12900437A28 /* Sei_la.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,8 @@
 		DF15F364FD046DB7AF891693 /* Pods-HardwareAccess-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HardwareAccess-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-HardwareAccess-tvOS/Pods-HardwareAccess-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		F93B11822556D12800437A28 /* HardwareAccess-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HardwareAccess-Bridging-Header.h"; sourceTree = "<group>"; };
+		F93B11832556D12900437A28 /* Sei_la.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sei_la.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +135,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				F93B11832556D12900437A28 /* Sei_la.swift */,
+				F93B11822556D12800437A28 /* HardwareAccess-Bridging-Header.h */,
 			);
 			name = HardwareAccess;
 			sourceTree = "<group>";
@@ -294,7 +299,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 63AW6LA57D;
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1210;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -568,6 +573,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F93B11842556D12900437A28 /* Sei_la.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -610,6 +616,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 042C09B34E2EA894024E5580 /* Pods-HardwareAccess-HardwareAccessTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -633,6 +640,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B35FEC141963CFA3D4F01C86 /* Pods-HardwareAccess-HardwareAccessTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = HardwareAccessTests/Info.plist;
@@ -667,6 +675,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = HardwareAccess;
+				SWIFT_OBJC_BRIDGING_HEADER = "HardwareAccess-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -690,6 +699,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = HardwareAccess;
+				SWIFT_OBJC_BRIDGING_HEADER = "HardwareAccess-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

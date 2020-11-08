@@ -1,4 +1,5 @@
 import React from 'react';
+import { BleManager, Device } from "react-native-ble-plx"
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,12 +8,85 @@ import {
   Text,
   ImageBackground,
   StatusBar,
+  Platform,
 } from 'react-native';
 
 
 
 
 export default class MainPage extends React.Component{
+    constructor(){
+        super()
+        this.manager = new BleManager()
+        this.device = new Device()
+    }
+
+    scanAndConnect(){
+        const BLE_DEVICE_NAME = 'BT05'
+
+        this.manager.startDeviceScan(null, null, (error, device) => {
+            console.log("Scanning...")
+            console.log(device)
+
+            if (error) {
+                this.error(error.message)
+                return
+            }
+
+            if (device.name == BLE_DEVICE_NAME){
+                console.log("Connecting to device")
+                this.manager.stopDeviceScan()
+                device.connect()
+                    .then((device) => {
+                        console.log("Connected! Discovering services and characteristics")
+                        return device.discoverAllServicesAndCharacteristics()
+                        // await device.discoverAllServicesAndCharacteristics();
+                        // const services = await device.services();
+                        // services.forEach(async service => {
+                        // const characteristics = await device.characteristicsForService(service.uuid);
+                        // characteristics.forEach(console.log);
+                        // });
+                    })
+                    .then((device) => {
+                        console.log("Setting notifications")
+                    })
+                    .then(() => {
+                        console.log("Listening...")
+                        this.send(device)
+                    }, (error) => {
+                        console.log(error.message)
+                    })
+                this.device = device
+                }
+                //
+            });
+    }
+
+    send(){
+        console.log(this.device)
+        this.manager.writeCharacteristicWithResponseForDevice(this.device.id,
+            this.device.serviceUUIDs[0],
+            this.manager.characteristicsForDevice(this.device.id),
+            "ok")
+            .catch((error) => {
+                console.log('error in writing data');
+                console.log(error);
+            })
+    }
+
+
+    componentDidMount(){
+        if (Platform.OS === 'ios'){
+            this.manager.onStateChange((state) => {
+                if (state === 'PoweredOn') this.scanAndConnect()
+            })
+        } else {
+            this.scanAndConnect()
+        }
+        this.send()
+    }
+
+
     render() {
         return(
           <View style={ styles.container }>
