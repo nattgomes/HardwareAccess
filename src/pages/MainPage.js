@@ -10,6 +10,7 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
+import base64 from 'react-native-base64';
 
 
 
@@ -26,7 +27,7 @@ export default class MainPage extends React.Component{
 
         this.manager.startDeviceScan(null, null, (error, device) => {
             console.log("Scanning...")
-            console.log(device)
+            //console.log(device)
 
             if (error) {
                 this.error(error.message)
@@ -63,11 +64,9 @@ export default class MainPage extends React.Component{
     }
 
     send(){
-        console.log(this.device)
-        this.manager.writeCharacteristicWithResponseForDevice(this.device.id,
-            this.device.serviceUUIDs[0],
-            this.manager.characteristicsForDevice(this.device.id),
-            "ok")
+        console.log(this.manager.monitorCharacteristicForDevice())
+        this.manager.writeCharacteristicWithResponseForDevice("CF0E6809-8B8E-DD95-4CF6-3CE7B4BBD16A",
+            "0000ffe0-0000-1000-8000-00805f9b34fb", "FFE1", base64.encode("H"))
             .catch((error) => {
                 console.log('error in writing data');
                 console.log(error);

@@ -21,6 +21,7 @@
 		9998F148941C3D3C175C91F9 /* libPods-HardwareAccess-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD6B0F9839C851D3EB89F9B /* libPods-HardwareAccess-tvOSTests.a */; };
 		A6C7131D7D7EFC1F6A1C5D0B /* libPods-HardwareAccess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B5DAB6269D64A42DBDBAA98 /* libPods-HardwareAccess.a */; };
 		F93B11842556D12900437A28 /* Sei_la.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93B11832556D12900437A28 /* Sei_la.swift */; };
+		F951CEE625586F790031CC9D /* libRCTBluetoothSerial.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F951CEE025586F540031CC9D /* libRCTBluetoothSerial.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "HardwareAccess-tvOS";
+		};
+		F951CEDF25586F540031CC9D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F951CEDB25586F540031CC9D /* RCTBluetoothSerial.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 69CA06031CC43C2900AF6479;
+			remoteInfo = RCTBluetoothSerial;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -70,6 +78,7 @@
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F93B11822556D12800437A28 /* HardwareAccess-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HardwareAccess-Bridging-Header.h"; sourceTree = "<group>"; };
 		F93B11832556D12900437A28 /* Sei_la.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sei_la.swift; sourceTree = "<group>"; };
+		F951CEDB25586F540031CC9D /* RCTBluetoothSerial.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBluetoothSerial.xcodeproj; path = "../node_modules/react-native-bluetooth-serial-next/ios/RCTBluetoothSerial.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F951CEE625586F790031CC9D /* libRCTBluetoothSerial.a in Frameworks */,
 				A6C7131D7D7EFC1F6A1C5D0B /* libPods-HardwareAccess.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -172,6 +182,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F951CEDB25586F540031CC9D /* RCTBluetoothSerial.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -198,6 +209,14 @@
 				00E356EE1AD99517003FC87E /* HardwareAccessTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* HardwareAccess-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* HardwareAccess-tvOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F951CEDC25586F540031CC9D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F951CEE025586F540031CC9D /* libRCTBluetoothSerial.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -323,6 +342,12 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = F951CEDC25586F540031CC9D /* Products */;
+					ProjectRef = F951CEDB25586F540031CC9D /* RCTBluetoothSerial.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* HardwareAccess */,
@@ -332,6 +357,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		F951CEE025586F540031CC9D /* libRCTBluetoothSerial.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTBluetoothSerial.a;
+			remoteRef = F951CEDF25586F540031CC9D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {
