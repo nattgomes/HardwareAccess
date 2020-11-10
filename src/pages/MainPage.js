@@ -7,19 +7,35 @@ import {
   View,
   Text,
   ImageBackground,
+  TouchableOpacity,
   StatusBar,
   Platform,
+  Image,
 } from 'react-native';
-import base64 from 'react-native-base64';
-
-
 
 
 export default class MainPage extends React.Component{
     constructor(){
+        let cha;
         super()
         this.manager = new BleManager()
-        this.device = new Device()
+        // this.device = new Device()
+        this.state={
+            device: null,
+            buttonClicked: false,
+            messages: [],
+        };
+      }
+
+    componentDidMount(){
+        const subscription = this.manager.onStateChange(state => {
+            if (state === "PoweredOn") {
+              this.scanAndConnect();
+              console.log("Bluetooth: ON");
+            } else {
+              console.log("Bluetooth: OFF");
+            }
+          }, true);
     }
 
     scanAndConnect(){
@@ -41,61 +57,93 @@ export default class MainPage extends React.Component{
                     .then((device) => {
                         console.log("Connected! Discovering services and characteristics")
                         return device.discoverAllServicesAndCharacteristics()
-                        // await device.discoverAllServicesAndCharacteristics();
-                        // const services = await device.services();
-                        // services.forEach(async service => {
-                        // const characteristics = await device.characteristicsForService(service.uuid);
-                        // characteristics.forEach(console.log);
-                        // });
                     })
+                    // .then((device) => {
+                    //     console.log("Setting notifications")
+                    // })
                     .then((device) => {
-                        console.log("Setting notifications")
+                        this.findServicesAndCharacteristics(device);
                     })
-                    .then(() => {
-                        console.log("Listening...")
-                        this.send(device)
-                    }, (error) => {
+                    .catch(error => {
                         console.log(error.message)
-                    })
-                this.device = device
+                      });
+                    // .then(() => {
+                    //     console.log("Listening...")
+                    //     // this.send(device)
+                    // }, (error) => {
+                    //     console.log(error.message)
+                    // })
+                // this.device = device
                 }
                 //
             });
     }
 
-    send(){
-        console.log(this.manager.monitorCharacteristicForDevice())
-        this.manager.writeCharacteristicWithResponseForDevice("CF0E6809-8B8E-DD95-4CF6-3CE7B4BBD16A",
-            "0000ffe0-0000-1000-8000-00805f9b34fb", "FFE1", base64.encode("H"))
-            .catch((error) => {
-                console.log('error in writing data');
-                console.log(error);
-            })
-    }
+    findServicesAndCharacteristics(device) {
+        device.services().then(services => {
+          services.forEach((service, i) => {
+            console.log("Service UUID: " + service.uuid);
+            service.characteristics().then(characteristics => {
+              characteristics.forEach((c, i) => {
+                if (c.isWritableWithoutResponse) {
+                  this.cha = c;
+                }
+              });
+            });
+          });
+        });
+      }
 
+    // send(){
+    //     this.manager.writeCharacteristicWithResponseForDevice("CF0E6809-8B8E-DD95-4CF6-3CE7B4BBD16A",
+    //         "0000ffe0-0000-1000-8000-00805f9b34fb", "FFE1", "TAo=")
+    //         .catch((error) => {
+    //             console.log('error in writing data');
+    //             console.log(error);
+    //         })
+    // }
 
-    componentDidMount(){
-        if (Platform.OS === 'ios'){
-            this.manager.onStateChange((state) => {
-                if (state === 'PoweredOn') this.scanAndConnect()
-            })
-        } else {
-            this.scanAndConnect()
-        }
-        this.send()
-    }
+    turnOn(val){
+        this.cha.writeWithoutResponse(val).catch(err => {
+            console.log("Could not write value to Arduino");
+        });
+        let message = "LED's turned on"
+        this.setState({messages: message, buttonClicked: true})
+       }
 
+    turnOff(val) {
+        this.cha.writeWithoutResponse(val).catch(err => {
+          console.log("Could not turn off leds")
+          });
+        let message = "LED's turned off"
+        this.setState({messages: message})
+      }
 
     render() {
         return(
           <View style={ styles.container }>
+              
               <ImageBackground
                 source={require('../img/background.png')}
                 style={styles.bgImage}
                 resizeMode = 'cover'>
 
-                <View style={[styles.section, styles.sectionLarge]}>
-                    <Text>Bla</Text>
+                <View style={[styles.default, styles.line]}>
+                <Image style={[styles.default, styles.icon]} 
+                    source={require('../img/escritorio.png')} />
+                <Text style={ [styles.default, styles.name_light] }> Escritório</Text>
+                <TouchableOpacity style={styles.touchable} onPress={() => this.turnOn("SAo=")}>
+                <Image style={styles.icon2} resizeMode="center"
+                    source={require('../img/turn_on.png')} />
+                     </TouchableOpacity>
+                <TouchableOpacity style={styles.touchable} onPress={() => this.turnOn("TAo=")}>          
+                <Image style={styles.icon2}
+                    source={require('../img/control.png')} resizeMode="center"/>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.touchable}> 
+                <Image style={styles.icon2} 
+                    source={require('../img/config.png')} resizeMode="center"/>
+                </TouchableOpacity>
                 </View>
             </ImageBackground>
 
@@ -109,30 +157,46 @@ export default class MainPage extends React.Component{
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: '#000',
-        alignItems: "center",
-        justifyContent: "space-around",
         flexDirection: "row",
-        paddingLeft: 10,
-        paddingRight:10,
+     },
+     line:{
+        flexDirection: "row"
+     },
+     touchable:{
+         flex: 0.25,
      },
      bgImage:{
          flex: 1,
          marginHorizontal: -20,
      },
-     txtPoint:{
-         color: "white",
-         fontSize: 80,
+     default:{
+         padding:20,
+         borderRadius:4,
+         borderWidth: 0.5,
      },
-     section:{
-         flex: 1,
-         paddingHorizontal:20,
-         justifyContent: "center",
-         alignItems: "center"
+     icon:{
+         flex: 0.1, 
+         width: 10,
+        height: 10,
+
+     },
+     icon2:{
+        flex: 1, 
+        width: 50,
+       height: 50,
+
+    },
+     name_light:{
+         flex: 0.6,
+         textAlign: "left",
+         color: 'white',
+        fontSize: 18,
+        flexGrow: 1,
+        padding:10,
         },
-    sectionLarge:{
-        flex: 4,
-        justifyContent: "space-around",
+    btn_turn_on_off:{
+        flex: 0.4,
+        textAlign: "center"
     },
 
   });
