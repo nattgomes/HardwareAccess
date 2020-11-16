@@ -7,5 +7,5 @@ O aplicativo, nomeado Lights On é composto de duas telas. A primeira correspond
 Cabe dizer que, assim que realizado o login, a varredura pelo BLE informado, conexão e descobrimento de suas características ocorrem de forma automática. Implementado apenas o botão de ligar/desligar para apenas um LED haja vista que se dispunha de apenas um arduino e módulo BLE.
 
 
-Exemplo de funcionamento de tela principal:
+Exemplo de funcionamento de tela principal:<br/>
 <img src = https://media.giphy.com/media/hiLtHAo2ItAnw9k0tH/giphy.gif>
