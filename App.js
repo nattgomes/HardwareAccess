@@ -17,10 +17,20 @@ import {
   StatusBar,
 } from 'react-native';
 import MainPage from './src/pages/MainPage'
+import LoginPage from './src/pages/LoginPage'
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Sending...']);
 
 
 
 const AppNavigator = createStackNavigator({
+
+  'Login':{
+    screen: LoginPage,
+    navigationOptions: {
+        headerShown: false,
+    }
+  },
   'Main':{
     screen: MainPage,
     navigationOptions: {

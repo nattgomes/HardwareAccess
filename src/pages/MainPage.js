@@ -1,32 +1,31 @@
 import React from 'react';
 import { BleManager, Device } from "react-native-ble-plx"
 import {
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
   Text,
   ImageBackground,
   TouchableOpacity,
-  StatusBar,
-  Platform,
   Image,
 } from 'react-native';
 
 
+import onImg from '../img/on_img.png';
+import offImg from '../img/off_img.png';
+
+
 export default class MainPage extends React.Component{
+  
+
+    // Define um construtor com estado isOn = false para inicializar imagem de botão desligado
     constructor(){
         let cha;
         super()
         this.manager = new BleManager()
-        // this.device = new Device()
-        this.state={
-            device: null,
-            buttonClicked: false,
-            messages: [],
-        };
+        this.state={ isOn: false };
       }
 
+    // Caso o estado do dispositivo BLE esteja ativo, chama função para scan e conexão
     componentDidMount(){
         const subscription = this.manager.onStateChange(state => {
             if (state === "PoweredOn") {
@@ -34,10 +33,12 @@ export default class MainPage extends React.Component{
               console.log("Bluetooth: ON");
             } else {
               console.log("Bluetooth: OFF");
+              this.scanAndConnect();
             }
           }, true);
     }
 
+    // realiza scan de dispositivo BLE pelo nome informado. Se encontra, para o scan e tenta conectar
     scanAndConnect(){
         const BLE_DEVICE_NAME = 'BT05'
 
@@ -58,27 +59,17 @@ export default class MainPage extends React.Component{
                         console.log("Connected! Discovering services and characteristics")
                         return device.discoverAllServicesAndCharacteristics()
                     })
-                    // .then((device) => {
-                    //     console.log("Setting notifications")
-                    // })
                     .then((device) => {
                         this.findServicesAndCharacteristics(device);
                     })
                     .catch(error => {
                         console.log(error.message)
                       });
-                    // .then(() => {
-                    //     console.log("Listening...")
-                    //     // this.send(device)
-                    // }, (error) => {
-                    //     console.log(error.message)
-                    // })
-                // this.device = device
                 }
-                //
             });
     }
 
+    // Descobre serviços e características e atribui a um objeto com o qual se comunicará com o BLE
     findServicesAndCharacteristics(device) {
         device.services().then(services => {
           services.forEach((service, i) => {
@@ -94,31 +85,40 @@ export default class MainPage extends React.Component{
         });
       }
 
-    // send(){
-    //     this.manager.writeCharacteristicWithResponseForDevice("CF0E6809-8B8E-DD95-4CF6-3CE7B4BBD16A",
-    //         "0000ffe0-0000-1000-8000-00805f9b34fb", "FFE1", "TAo=")
-    //         .catch((error) => {
-    //             console.log('error in writing data');
-    //             console.log(error);
-    //         })
-    // }
+    // Como a imagem é trocada de acordo com o status do LED (ligado ou não), renderiza a imagem em conformidade com este status. A luz sempre inicializa desligada.
+    renderImage() {
+      var imgSource = this.state.isOn? onImg : offImg;
+      return (
+        <Image
+          style={ styles.icon2 } 
+          resizeMode="center"
+          source={ imgSource }
+        />
+      );
+    }
 
-    turnOn(val){
+    // Chamada responsável por verificar o status atual do LED e realizar ação de liga-lo caso desligado e vice-versa.
+    turnOnOff(){ 
+      this.state.isOn = !this.state.isOn;
+      this.setState({isOn: this.state.isOn});
+      if (this.state.isOn){
+        this.sendMessage("SAo=")
+        console.log("LED On !")
+      }
+      else{
+        this.sendMessage("TAo=")
+        console.log("LED Off !")
+      }
+    }
+
+    // Função através da qual efetivamente é realizada a comunicação com o BLE. Recebe como parâmetro uma letra (H ou L) codificada em base64 que é necessária na chamada do método writeWithoutResponse(()
+    sendMessage(val){
         this.cha.writeWithoutResponse(val).catch(err => {
             console.log("Could not write value to Arduino");
         });
-        let message = "LED's turned on"
-        this.setState({messages: message, buttonClicked: true})
        }
 
-    turnOff(val) {
-        this.cha.writeWithoutResponse(val).catch(err => {
-          console.log("Could not turn off leds")
-          });
-        let message = "LED's turned off"
-        this.setState({messages: message})
-      }
-
+    // Responsável pela renderização da tela. Atribui imagem para background e outras imagens para botões. Apenas o botão de ligar/desligar possui função associada
     render() {
         return(
           <View style={ styles.container }>
@@ -132,11 +132,10 @@ export default class MainPage extends React.Component{
                 <Image style={[styles.default, styles.icon]} 
                     source={require('../img/escritorio.png')} />
                 <Text style={ [styles.default, styles.name_light] }> Escritório</Text>
-                <TouchableOpacity style={styles.touchable} onPress={() => this.turnOn("SAo=")}>
-                <Image style={styles.icon2} resizeMode="center"
-                    source={require('../img/turn_on.png')} />
-                     </TouchableOpacity>
-                <TouchableOpacity style={styles.touchable} onPress={() => this.turnOn("TAo=")}>          
+                <TouchableOpacity style={styles.touchable} onPress={() => this.turnOnOff() }>
+                  {this.renderImage()}
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.touchable}>          
                 <Image style={styles.icon2}
                     source={require('../img/control.png')} resizeMode="center"/>
                 </TouchableOpacity>
@@ -148,12 +147,11 @@ export default class MainPage extends React.Component{
             </ImageBackground>
 
             </View>
-
-
         );
       }
 }
 
+// Configuração de estilo para componentes da página
 const styles = StyleSheet.create({
     container:{
         flex:1,
@@ -172,19 +170,17 @@ const styles = StyleSheet.create({
      default:{
          padding:20,
          borderRadius:4,
-         borderWidth: 0.5,
+         borderWidth: 0.1,
      },
      icon:{
          flex: 0.1, 
          width: 10,
         height: 10,
-
      },
      icon2:{
         flex: 1, 
         width: 50,
        height: 50,
-
     },
      name_light:{
          flex: 0.6,
@@ -198,5 +194,4 @@ const styles = StyleSheet.create({
         flex: 0.4,
         textAlign: "center"
     },
-
   });
