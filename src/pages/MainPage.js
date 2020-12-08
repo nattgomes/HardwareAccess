@@ -7,7 +7,10 @@ import {
   ImageBackground,
   TouchableOpacity,
   Image,
+  AsyncStorage,
+  Button,
 } from 'react-native';
+import firebase from 'firebase';
 
 
 import onImg from '../img/on_img.png';
@@ -22,7 +25,7 @@ export default class MainPage extends React.Component{
         let cha;
         super()
         this.manager = new BleManager()
-        this.state={ isOn: false };
+        this.state={ isOn: false, isLoading: true };
       }
 
     // Caso o estado do dispositivo BLE esteja ativo, chama função para scan e conexão
@@ -47,7 +50,7 @@ export default class MainPage extends React.Component{
             //console.log(device)
 
             if (error) {
-                this.error(error.message)
+                console.log(error)
                 return
             }
 
@@ -118,37 +121,58 @@ export default class MainPage extends React.Component{
         });
        }
 
+     
+     signOut = async () => {
+      try {
+          await AsyncStorage.clear(); // to clear the token 
+          this.setState({ isLoading: false});
+      } catch (e) {
+          console.log(e);
+      }
+  }
+
+
+
     // Responsável pela renderização da tela. Atribui imagem para background e outras imagens para botões. Apenas o botão de ligar/desligar possui função associada
     render() {
-        return(
-          <View style={ styles.container }>
+
+      //console.log(firebase.auth().currentUser)
+      if (!this.state.isLoading) {
+        this.props.navigation.replace('Login')};
+      
+      return(
+        <View style={ styles.container }>
+                
+            <ImageBackground
+              source={require('../img/background.png')}
+              style={styles.bgImage}
+              resizeMode = 'cover'>
+  
+              <View style={[styles.default, styles.line]}>
+              <Button style={styles.btnOut} title="logout" onPress={() => this.signOut()} />
+              </View>
+              <View style={[styles.default, styles.line]}>
+              <Image style={[styles.default, styles.icon]} 
+                  source={require('../img/escritorio.png')} />
+              <Text style={ [styles.default, styles.name_light] }> Escritório</Text>
+              <TouchableOpacity style={styles.touchable} onPress={() => this.turnOnOff() }>
+                {this.renderImage()}
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.touchable}>          
+              <Image style={styles.icon2}
+                  source={require('../img/control.png')} resizeMode="center"/>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.touchable}> 
+              <Image style={styles.icon2} 
+                  source={require('../img/config.png')} resizeMode="center"/>
+              </TouchableOpacity>
               
-              <ImageBackground
-                source={require('../img/background.png')}
-                style={styles.bgImage}
-                resizeMode = 'cover'>
-
-                <View style={[styles.default, styles.line]}>
-                <Image style={[styles.default, styles.icon]} 
-                    source={require('../img/escritorio.png')} />
-                <Text style={ [styles.default, styles.name_light] }> Escritório</Text>
-                <TouchableOpacity style={styles.touchable} onPress={() => this.turnOnOff() }>
-                  {this.renderImage()}
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.touchable}>          
-                <Image style={styles.icon2}
-                    source={require('../img/control.png')} resizeMode="center"/>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.touchable}> 
-                <Image style={styles.icon2} 
-                    source={require('../img/config.png')} resizeMode="center"/>
-                </TouchableOpacity>
-                </View>
-            </ImageBackground>
-
-            </View>
-        );
-      }
+              </View>
+          </ImageBackground>
+  
+          </View>
+      );
+  }
 }
 
 // Configuração de estilo para componentes da página
@@ -158,7 +182,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
      },
      line:{
-        flexDirection: "row"
+        flexDirection: "row",
      },
      touchable:{
          flex: 0.25,
@@ -194,4 +218,9 @@ const styles = StyleSheet.create({
         flex: 0.4,
         textAlign: "center"
     },
+    btnOut:{
+      justifyContent: 'flex-end',
+      alignItems: 'flex-end',
+      textAlign: 'right',
+    }
   });

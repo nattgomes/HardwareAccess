@@ -34,7 +34,8 @@ export default class LoginPage extends React.Component{
             appId: "1:479982237335:web:288ce8aea9998e02a01bd2"
         };
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
+        
     }
 
     onChangeHandler(field, value){
@@ -87,6 +88,7 @@ export default class LoginPage extends React.Component{
                 })
             })
     }
+
 
     getRegister(){
         const { email, password } = this.state;
