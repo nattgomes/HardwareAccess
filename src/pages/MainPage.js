@@ -148,8 +148,8 @@ export default class MainPage extends React.Component{
               style={styles.bgImage}
               resizeMode = 'cover'>
   
-              <View style={[styles.default, styles.line]}>
-              <Button style={styles.btnOut} title="logout" onPress={() => this.signOut()} />
+              <View style={[styles.default, styles.line, styles.btn_logOff]}>
+              <Button color="yellow"  title="Sair" onPress={() => this.signOut()} />
               </View>
               <View style={[styles.default, styles.line]}>
               <Image style={[styles.default, styles.icon]} 
@@ -205,22 +205,24 @@ const styles = StyleSheet.create({
         flex: 1, 
         width: 50,
        height: 50,
-    },
-     name_light:{
-         flex: 0.6,
-         textAlign: "left",
-         color: 'white',
+      },
+      name_light:{
+        flex: 0.6,
+        textAlign: "left",
+        color: 'white',
         fontSize: 18,
         flexGrow: 1,
         padding:10,
-        },
-    btn_turn_on_off:{
+      },
+      btn_turn_on_off:{
         flex: 0.4,
         textAlign: "center"
-    },
-    btnOut:{
-      justifyContent: 'flex-end',
-      alignItems: 'flex-end',
-      textAlign: 'right',
-    }
+      },
+      btn_logOff:{
+        justifyContent: 'flex-end',
+        textAlign: 'right',
+        marginBottom: -25,
+        marginTop: -15,
+
+      }
   });
